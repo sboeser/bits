@@ -13,5 +13,6 @@ Among others it contains:
   * Various commands to setup figures in common layout, e.g. such that all figures
   in a row are scaled to have the same height.
 
-For the full description, refer to the guide.
+For the full description, refer to
+[the guide](bits.pdf).
 
