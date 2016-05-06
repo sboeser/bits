@@ -1,0 +1,285 @@
+\typeout{}
+\typeout{Package `bits` provides some usefull bits and pieces}
+\typeout{                     ---- Sebastian Boeser, 06.05.16}
+\typeout{}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bits}[2016/05/06 Useful bits and pieces]
+ 
+\RequirePackage{calc}
+\RequirePackage{pifont}
+\RequirePackage{graphicx}
+\RequirePackage{floatflt}
+\RequirePackage{marginnote}
+\RequirePackage[dvipsnames]{xcolor}
+
+% a decay arrow
+\newcommand{\decayto}[1][1.5]{
+      \let\oldunitlength\relax
+      \newlength{\oldunitlength}\setlength{\oldunitlength}{\unitlength}
+      \setlength{\unitlength}{1em}
+      \ensuremath{
+      \hspace*{.5em}   %space before
+      \begin{picture}(#1,1.0)
+         \put(0.0,1.0){\line(0,-1){0.75}}
+         \put(0.0,0.25){\vector(1,0){#1}}
+      \end{picture}
+      \hspace*{.5em}  %space after
+      }
+      \setlength{\unitlength}{\oldunitlength}
+}
+                         
+% and other usefull reaction formula stuff
+\newlength{\decaylen}\settowidth{\decaylen}{\decayto}
+
+%units should be set upright, not in mathmode
+\newcommand{\un}[1]{\ensuremath{\, \mathrm{#1}}}
+
+%show fraction as a/b in text, use large math style
+\newlength{\delimw}
+\newlength{\rxfc} \setlength{\rxfc}{.2\baselineskip}
+\newcommand{\xfrac}[2]{
+  \ensuremath{
+    \settowidth{\delimw}{\widthof{$^{}\left/_{}\right.$}}
+    \raisebox{\rxfc}{\ensuremath{#1}}
+    \hspace*{-.5\delimw}^{}\left/_{}\hspace*{-.25\delimw}
+    \raisebox{-\rxfc}{\ensuremath{#2}}
+    \right.
+  }
+}
+%show fraction as a/b in text, use small upright style
+\newlength{\dsymba} 
+\newlength{\dsymbb} 
+\newcommand{\sfrac}[2]{
+  \ensuremath{
+    \settowidth{\delimw}{\widthof{$^{}\left/_{}\right.$}}
+    {}^{#1}
+    \hspace*{-.5\delimw}^{}\left/_{}\hspace*{-.25\delimw}
+    _{#2}
+    \right.
+  }
+}
+
+% a number with a circle around it
+\newcounter{temp}
+\newcommand{\circnumb}[1]{\setcounter{temp}{191+#1}\ding{\value{temp}}}
+
+
+% mathematics
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\order}[1]{\ensuremath{\mathcal{O}\left(#1\right)}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\veps}{\epsilon}
+\newcommand{\const}{\mathrm{const}}
+\newcommand{\laplace}{\mathbf{\Delta}}
+\newcommand{\ket}[1]{\left|#1\right>}
+\newcommand{\bra}[1]{\left<#1\right.}
+\newcommand{\mean}[1]{\left<#1\right>}
+
+% define degree symbol
+\DeclareRobustCommand{\degree}{\ensuremath{^{\circ}}}
+\DeclareRobustCommand{\degC}{\ensuremath{^{\circ}C}}
+
+% A macro \underwiggle for drawing variable length wiggly lines horizontally    
+% under its argument in the same way as \underbar.                              
+% Written by Dr. John S. Garavelli on 4 December 1987 and adapted from a routine
+% by A. G. W. Cameron at Harvard University which appeared in TUGBOAT November  
+% 1985, vol. 6, no. 3, p. 155.                                                  
+% WARNING: the computations performed by this macro can be very time consuming, 
+%          so use it sparingly.                                                 
+                                                                                
+\newcount\vone \newcount\vtwo \newcount\vthree \newcount\vfour \newcount\vfive  
+\newcount\vsix \newcount\vseven \newcount\veight \newcount\vnine \newcount\vten 
+\newbox\wbox \newdimen\wbsize                                                   
+\def\underwiggle#1{\ifmmode\setbox\wbox=\hbox{$#1$}                             
+                      \else\setbox\wbox=\hbox{#1}\fi                            
+\dp\wbox=0pt\wbsize=\wd\wbox\lower2pt\hbox to0pt                                
+{\hss$\vone=0\vtwo=0\vthree=7000\vfive=\vtwo                                    
+\loop                                                                           
+\vseven=\vone \divide\vseven by 2                                               
+\vsix=\vfive \divide\vsix by 2 \multiply\vsix by -1                             
+\veight=16384 \advance\veight by \vsix                                          
+\vnine=16384 \advance\vnine by -\vsix                                           
+\vten=\vseven \advance\vten by 32768                                            
+\hskip\vseven sp                                                                
+\vrule height\veight sp width 32768 sp depth\vnine sp                           
+\hskip-\vten sp                                                                 
+\ifdim\vseven sp<\wbsize \advance\vone by 20000                                 
+\advance\vtwo by \vthree                                                        
+\vfour=-\vtwo \divide\vfour by 10                                               
+\advance\vthree by \vfour                                                       
+\advance\vfive by \vtwo                                                         
+\repeat$}\box\wbox}                                                             
+
+%meiner Kommentare
+\setlength{\marginparwidth}{2cm}
+\newcommand{\com}[2][NavyBlue]{
+  \ifmmode
+    {}^{\color{#1}\star}\relax
+    \marginnote{\setlength{\baselineskip}{.7em}{\color{#1}\tiny#2}}\relax
+  \else
+  \ensuremath{{}^{\color{#1}\star}}\relax
+    \marginpar{\setlength{\baselineskip}{.7em}{\color{#1}\tiny#2}}\relax
+  \fi
+}
+%let each user have their own color
+\newcommand{\mycomcolor}[2]{
+  \colorlet{#1}{#2}
+  \marginpar{\color{#1} \tiny Comments by #1}
+}
+
+%%Usage:
+%% \onefig{ mypic }{ The caption text }
+%% \twofig{ mypic1 }{ The caption of fig 1 }{mypic2}{ The caption of fig 2 }
+%% \twofigone{ mypic1 }{ mypic2 }{ The caption text }
+%% The figure placement can be adjusted putting optinal placement characters in
+%% square brackets before the figures:
+%% \onefig[h!] { mypic }{ The caption text }
+%% Placement characters are
+%%  h : put figure right here
+%%  t : put figure at the top of the page
+%%  b : put figure at the bottom of the page
+%%  p : put figure on this page
+%%  h!,t!,b!: force figure to be here/top/bottom
+%% Placement characters can be combined and are then treated in the order they
+%% are given in. The default is [tbp]
+
+% Seperator for the figures
+\newlength{\figwidth}
+\setlength{\figwidth}{0.9\columnwidth}
+\newcommand{\resetfigwidth}{\setlength{\figwidth}{0.9\columnwidth}}
+\newlength{\figsep}
+\setlength{\figsep}{0.05\columnwidth}
+\newcommand{\resetfigsep}{\setlength{\figsep}{0.05\columnwidth}}
+% The dimensions of the figures and parboxes
+\newlength{\pba} \newlength{\wa} %Width of parbox and figure A
+\newlength{\pbb} \newlength{\wb} %Width of parbox and figure B
+\newlength{\pbc} \newlength{\wc} %Width of parbox and figure C
+\newlength{\ha} %height of figure A
+
+
+%One figure with one caption
+\newcommand{\onefig}[3][tbp]{
+  \begin{figure}[#1]
+    {\center
+      \includegraphics[clip=true, width=\figwidth]{#2}\caption{#3}
+    }
+  \end{figure}
+}
+
+%Set one figure surrounded by text  
+\newcommand{\textfig}[4][v]{
+  \setlength{\pba}{#2\textwidth+\figsep}
+  \begin{floatingfigure}[#1]{\pba}
+    \includegraphics[width=#2\textwidth]{#3}\caption{#4}\vspace*{\baselineskip}
+  \end{floatingfigure}
+}
+
+%Set one figure surrounded by text with seperate caption as 5th argument  
+\newcommand{\textfigscap}[5][v]{
+  \setlength{\pba}{#2\textwidth+\figsep}
+  \begin{floatingfigure}[#1]{\pba}
+    \includegraphics[width=#2\textwidth]{#3}\caption[{#5}]{#4}\vspace*{\baselineskip}
+  \end{floatingfigure}
+}
+  
+  
+%Two figures with two captions
+\newcommand{\twofig}[5][tbp]{
+  % Get the width for both, scaled to the same height
+  \settowidth{\wa}{\includegraphics{#2}}
+  \settoheight{\ha}{\includegraphics{#2}}
+  \settowidth{\wb}{\includegraphics[height=\ha]{#4}}
+  % Now get relative horizontal width for the parboxes
+  \setlength{\pba}{(\textwidth-\figsep)*\ratio{\wa}{\wa+\wb}}
+  \setlength{\pbb}{(\textwidth-\figsep)*\ratio{\wb}{\wa+\wb}}
+  %Now include the pictures in parboxes, the 2nd move right by \hfill
+  %Alignment is top: figures are same hight, so caption will end up at the same
+  %level as well
+  \begin{figure}[#1]
+    \parbox[t]{\pba}{\includegraphics[clip=true, width=\pba]{#2}\caption{#3}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbb}{\includegraphics[clip=true, width=\pbb]{#4}\caption{#5}}
+  \end{figure}
+}
+  
+%Two figures with one caption
+\newcommand{\twofigone}[4][tbp]{
+  % Get the width for both, scaled to the same height
+  \settowidth{\wa}{\includegraphics{#2}}
+  \settoheight{\ha}{\includegraphics{#2}}
+  \settowidth{\wb}{\includegraphics[height=\ha]{#3}}
+  % Now get relative horizontal width for the parboxes
+  \setlength{\pba}{(\textwidth-\figsep)*\ratio{\wa}{\wa+\wb}}
+  \setlength{\pbb}{(\textwidth-\figsep)*\ratio{\wb}{\wa+\wb}}
+  %Now include the pictures in parboxes, the 2nd move right by \hfill
+  \begin{figure}[#1]
+    \parbox[t]{\pba}{\includegraphics[clip=true, width=\pba]{#2}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbb}{\includegraphics[clip=true, width=\pbb]{#3}}
+    \caption{#4}
+  \end{figure}
+}
+
+%Three figures with three captions
+\newcommand{\threefig}[7][tbp]{
+  % Get the width for both, scaled to the same height
+  \settowidth{\wa}{\includegraphics{#2}}
+  \settoheight{\ha}{\includegraphics{#2}}
+  \settowidth{\wb}{\includegraphics[height=\ha]{#4}}
+  \settowidth{\wc}{\includegraphics[height=\ha]{#6}}
+  % Now get relative horizontal width for the parboxes
+  \setlength{\pba}{(\textwidth-2\figsep)*\ratio{\wa}{\wa+\wb+\wc}}
+  \setlength{\pbb}{(\textwidth-2\figsep)*\ratio{\wb}{\wa+\wb+\wc}}
+  \setlength{\pbc}{(\textwidth-2\figsep)*\ratio{\wc}{\wa+\wb+\wc}}
+  %Now include the pictures in parboxes, equally spaced by \hfill
+  %Alignment is top: figures are same hight, so caption will end up at the same
+  %level as well
+  \begin{figure}[#1]
+    \parbox[t]{\pba}{\includegraphics[clip=true, width=\pba]{#2}\caption{#3}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbb}{\includegraphics[clip=true, width=\pbb]{#4}\caption{#5}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbc}{\includegraphics[clip=true, width=\pbc]{#6}\caption{#7}}
+  \end{figure}
+}
+
+%Three figures with one captions
+\newcommand{\threefigone}[5][tbp]{
+  % Get the width for both, scaled to the same height
+  \settowidth{\wa}{\includegraphics{#2}}
+  \settoheight{\ha}{\includegraphics{#2}}
+  \settowidth{\wb}{\includegraphics[height=\ha]{#3}}
+  \settowidth{\wc}{\includegraphics[height=\ha]{#4}}
+  % Now get relative horizontal width for the parboxes
+  \setlength{\pba}{(\textwidth-2\figsep)*\ratio{\wa}{\wa+\wb+\wc}}
+  \setlength{\pbb}{(\textwidth-2\figsep)*\ratio{\wb}{\wa+\wb+\wc}}
+  % There are rounding errors
+  \setlength{\pbc}{\textwidth-2\figsep-\pba-\pbb}
+  %Now include the pictures in parboxes, equally spaced by \hfill
+  %Alignment is top: figures are same hight, so caption will end up at the same
+  %level as well
+  \begin{figure}[#1]
+    \parbox[t]{\pba}{\includegraphics[clip=true, width=\pba]{#2}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbb}{\includegraphics[clip=true, width=\pbb]{#3}}
+    \hspace*{-.5\pba}\hfill
+    \parbox[t]{\pbc}{\includegraphics[clip=true, width=\pbc]{#4}}
+    \caption{#5}
+  \end{figure}
+}
+
+%%% TABLES
+
+% Store default table line width
+\newlength{\thinlinewidth} \setlength{\thinlinewidth}{\arrayrulewidth}
+\newlength{\thicklinewidth} \setlength{\thicklinewidth}{3\arrayrulewidth}
+\newcommand{\hbline}{
+  \setlength{\arrayrulewidth}{\thinlinewidth}
+  \hline
+}
+%\newcommand{\hbline}{
+%  \setlength{\arrayrulewidth}{\thicklinewidth}
+%  \hline
+%}
+

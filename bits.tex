@@ -1,0 +1,229 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{bits}
+\usepackage{blindtext}
+\usepackage{amsmath}
+\begin{document}
+\title{Bits and pieces for \LaTeX}
+\author{Sebastian B\"oser}
+  \maketitle
+This package provides a list of randomly assorted but useful bits and pieces for writting my physics
+papers.
+
+\section{Characters, symbols and small stuff}
+A small collection of special characters and symbol definitions that work in all
+environments\ldots\\
+
+\begin{tabular}{rcl}
+  \verb|\un{km}|      & 3.1\un{km}   & units set upright, with small space \\
+  \verb|\circnumb{3}| & \circnumb{3} & a number with a circle around its (works
+    from 0  to 9) \\
+  \verb|\degree|      & \degree      & degree symbol \\
+  \verb|\degC|        & \degC        & degree Celsius \\
+  \verb|\xfrac{A}{B}|       & \xfrac{A}{B} &  fraction set in slanted mode\\
+  \verb|\sfrac{A}{B}|       & \sfrac{A}{B} &  fraction set in slanted mode, {\bf
+  inline} sized\\
+  \verb|\order{10}|   & \order{10} &  order of $\ldots$ \\
+  \verb|\underwiggle{text}| & \underwiggle{text} & wiggly line under the text  (slow!)
+\end{tabular}\\
+
+\ldots and some that work only in math mode\\
+
+\begin{tabular}{rcl}
+
+  \verb|$\dif$|       & $\frac{\dif N}{\dif t}$ & full differential set in upright
+    mode, no italic\\
+  \verb|$\eps$|       & $\eps$       &    I like this epsilon more...\\
+  \verb|$\veps$|      & $\veps$      &    ... than this one\\
+  \verb|$\const$|     & $\const$     &    frequently used, set in upright mode\\
+  \verb|$\laplace$|   & $\laplace$   &    in bold-face\\
+  \verb|$\bra$ $\ket$| & $\bra{\Psi}\ket{\Psi}$  & doesn't work with operator
+    inbetween   \\
+  \verb|$\mean{x}$|   & $\mean{x}$   &  used to describe the average  \\
+\end{tabular}
+
+\section{Comments}
+For side-margin comments, use the \verb|\com[color]{text}| command. Default
+color is {\tt NavyBlue}\com{{\tt \color{BrickRed}BrickRed} also looks good}, but you can use any color specified in {\tt dvipsnames}.
+Also, here is some text\com[ForestGreen]{quite a few comments here} with some comment 
+next to it. The same works in 
+\[
+  f(x) = ax^{2\com{... or better third power}}
+\]
+math mode. Known issue: comments in math mode may clash with other comments.
+If multiple users work on the same document, it may be quite useful to define
+your abbreviation for your comments, such as your initials. Use the 
+\verb|\mycomcolor{SB}{MidnightBlue}| \mycomcolor{SB}{MidnightBlue} to define {\tt
+SB} as short-hand for your color. For future comments, you can then just use
+\verb|\com[SB]{...}| to generate a comment in your color \com[SB]{a comment in
+my color}.
+
+\section{Reactions}
+The \verb|\decayto[length]| command provides a {\it ''decay''} arrow. The length of
+the arrow is set in units of {\tt em}, with a default length of {\tt 1.5em}.\\
+
+{\bf Examples:}\\
+\begin{tabular}{rl}
+  \verb|\decayto| & $\decayto$ \\
+  \verb|\decayto[3]| & $\decayto[3]$ \\
+  \verb|\decayto[6]| & $\decayto[6]$ \\
+\end{tabular}\\[2\baselineskip]
+
+To display decay chains, this is best used together with the \verb|alignat|
+enviroment.
+\begin{verbatim}
+\begin{alignat*}{3}
+  p + N \to X + \,& \pi^{\pm},K^{\pm}   \\
+            & \decayto[2.5] && \mu^{\pm} + \nu_\mu \\
+            & && \decayto e^{\pm} + {\nu_e} + \nu_\mu  \\
+\end{alignat*}
+\end{verbatim}
+\begin{alignat*}{3}
+  p + N \to X + \,& \pi^{\pm},K^{\pm}   \\
+            & \decayto[2.5] && \mu^{\pm} + \nu_\mu \\
+            & && \decayto e^{\pm} + {\nu_e} + \nu_\mu  \\
+\end{alignat*}
+
+\section{Figures}
+Space is sparse and we often want to setup figures in an efficient way. In
+particular if we have several figures in a row next to each other, it looks
+nicer if the layout is such that they have all the same height. Here are a few
+commands that try to make such a figure layout easier.
+
+\subsection{One figure}
+For one figure to be laid out over the full widht of the page, use the
+\verb|\onefig[pos]{myfig}{caption}| command. The optional {\tt pos} argument
+tells \LaTeX{} where to put the figure, for which you can give one or more
+preferences. \LaTeX{} tries to meet these in the order you provide them.\\
+
+\begin{tabular}{cl}
+  {\tt h} & put figure right here \\
+  {\tt t} & put figure at the top of the page \\
+  {\tt b} & put figure at the bottom of the page \\
+  {\tt p} & put figure on this page \\
+  {\tt h!,t!,\ldots} & any of the above with {\tt !}: force figure to be
+  here/top/... 
+\end{tabular}\\
+
+The default for the \verb|\onefig{}| and all other commands in this section is
+\verb|[tbp]|, so that the figure appears preferenially at the top, then at the
+bottom, then on the page. The figure width is by default set to \verb|0.9\columnwidth|, i.e. the figure will
+span 90\% of the width of the line. If you want to chanage this {\bf for all
+figures} you can use
+\begin{verbatim}
+  \setlength{\figwidth}{<your new figure width>}
+\end{verbatim}
+
+{\bf Example:}\\
+Here is the output of this command, which shows the figure across the full
+column. {\tt h!} assures that the figure appears right here.\\
+\verb|\onefig[h!]{horizontalfig}{This figure shows a prominent peak in the data}|
+
+\onefig[h!]{horizontalfig.png}{This figure shows a prominent peak in the data}
+
+\subsection{Two or three figures}
+If two or more figures are put next to each other, it looks usually best if both figures
+have the same height. This is achieved by the \verb|\twofig| and
+\verb|\twofigone| commands. The difference between the two commands is the the
+first one allows a separate caption for each figure, while the other ones has
+once caption for both figures. The syntax is as above
+\begin{verbatim}
+  \twofig[pos]{myfig1}{Caption of Fig. 1}{myfig2}{Caption of Fig. 2}
+  \twofigone[pos]{myfig1}{myfig2}{The common caption}
+\end{verbatim}
+and similarly for three figures
+\begin{verbatim}
+  \threefig[pos]
+     {myfig1}{Caption of Fig. 1}
+     {myfig2}{Caption of Fig. 2}
+     {myfig3}{Caption of Fig. 3}
+  \threefigone[pos]{myfig1}{myfig2}{myfig3}{The common caption}
+\end{verbatim}
+The figures are automatically scaled to have the same height and fill the {\tt
+figwidth}. In between the figures there is some space, which can be set with 
+\begin{verbatim}
+  \setlength{\figsep}{<your new figure seperation>}
+\end{verbatim}
+
+{\bf Example:}
+\begin{verbatim}
+  \twofig[h!]
+     {horizontalfig.png}{Left figure}
+     {verticalfig.png}{Right figure}
+\end{verbatim}
+\twofig[h!]
+   {horizontalfig.png}{Left figure}
+   {verticalfig.png}{Right figure}
+
+For the example with three figures in a row, we set the \verb|\figsep| so that
+there is a little more space and the figures become a little larger.
+\begin{verbatim}
+\setlength{\figsep}{0pt}
+\threefigone[ht!]
+  {horizontalfig.png}
+  {verticalfig.png}
+  {horizontalfig.png}
+  {Data (left), results (middle) and same data again (right). Note how
+   both  figures are automatically scaled to have the same height.}
+\setlength{\figsep}{0.05\columnwidth}
+\end{verbatim}
+\setlength{\figsep}{0em}
+\threefigone[ht!]
+  {horizontalfig.png}
+  {verticalfig.png}
+  {horizontalfig.png}
+  {Data (left), results (middle) and
+same data again (right). Note how both figures are automatically scaled to have the
+same height.}
+\setlength{\figsep}{0.05\columnwidth}
+
+\subsection{Floating figures}
+Sometimes it is also nice to have figures surrounded by text. For that we can
+use the \verb|\textfig| command.
+\begin{verbatim}
+\textfig[pos]{width}{myfig}{caption}
+\end{verbatim}
+The {\tt width} is given as a fraction of the linewidth. There are also
+positioning parameters that can be specified\\
+
+\begin{tabular}{rl}
+  {\tt r} & forces the figure to the right in a paragraph. \\
+  {\tt l} & forces the figure to the left in a paragraph. \\
+  {\tt p} & right in a paragraph if the pagenumber is odd, and to the left if
+  even. \\
+  {\tt v} & use the package option if defined, else same as {\tt p} (\bf default).
+\end{tabular}\\
+
+Note that if the figure colides with the page boundary, it is sometimes not
+shown at all -- use with care (or include a pagebreak just before).\\
+
+{\bf Example:}
+\begin{verbatim}
+\pagebreak
+\textfig[r]{.4}{horizontalfig.png}{Figure surrounded by text}
+\end{verbatim}
+
+\pagebreak
+\textfig[r]{.4}{horizontalfig.png}{Figure surrounded by text}
+{\color{gray}
+\blindtext}
+
+
+  
+%%Usage:
+%% \onefig{ mypic }{ The caption text }
+%% \twofig{ mypic1 }{ The caption of fig 1 }{mypic2}{ The caption of fig 2 }
+%% \twofigone{ mypic1 }{ mypic2 }{ The caption text }
+%% The figure placement can be adjusted putting optinal placement characters in
+%% square brackets before the figures:
+%% \onefig[h!] { mypic }{ The caption text }
+%% Placement characters are
+%%  h : put figure right here
+%%  t : put figure at the top of the page
+%%  b : put figure at the bottom of the page
+%%  p : put figure on this page
+%%  h!,t!,b!: force figure to be here/top/bottom
+%% Placement characters can be combined and are then treated in the order they
+%% are given in. The default is [tbp]
+
+
+\end{document}
