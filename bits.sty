@@ -12,6 +12,7 @@
 \RequirePackage{floatflt}
 \RequirePackage{marginnote}
 \RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{stackengine}
 
 % a decay arrow
 \newcommand{\decayto}[1][1.5]{
@@ -63,6 +64,10 @@
 % a number with a circle around it
 \newcounter{temp}
 \newcommand{\circnumb}[1]{\setcounter{temp}{191+#1}\ding{\value{temp}}}
+
+
+%bar over symbol with parenthesis around
+\newcommand{\brabar}[1]{\stackon[.1pt]{\ensuremath{#1}}{\scalebox{.4}{(}\raisebox{-1.7pt}{--}\scalebox{.4}{)}}}
 
 
 % mathematics
